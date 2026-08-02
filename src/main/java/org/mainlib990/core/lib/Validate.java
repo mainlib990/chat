@@ -41,7 +41,7 @@ public sealed interface Validate<V, R> {
         return rs.isEmpty() ? emptyValidated() : invalidated(rs);
     }
 
-    default V getValue() {
+    default V orElseThrow() {
         return switch (this) {
             case Validated(var v) -> v;
             case Invalidated(_) -> throw new IllegalStateException();
