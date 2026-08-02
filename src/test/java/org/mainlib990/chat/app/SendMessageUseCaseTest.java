@@ -62,17 +62,11 @@ class SendMessageUseCaseTest {
                 Map.entry(onlineChatting2.id(), onlineChatting2)
         );
 
-        final FakeChannelReader channelReader;
-        final FakeUserReader userReader;
+        final FakeChannelReader channelReader = new FakeChannelReader(channels);
+        final FakeUserReader userReader = new FakeUserReader(senders, receivers);
         final ChatPolicy chatPolicy = new ChatPolicy();
         final FakeChatWriter chatWriter = new FakeChatWriter();
-        final SendMessageUseCase useCase;
-
-        Config() {
-            channelReader = new FakeChannelReader(channels);
-            userReader = new FakeUserReader(senders, receivers);
-            useCase = new SendMessageUseCase(channelReader, userReader, chatPolicy, chatWriter);
-        }
+        final SendMessageUseCase useCase = new SendMessageUseCase(channelReader, userReader, chatPolicy, chatWriter);
     }
 
     static final String OPENED_CHANNEL = Config.opened1.id().value().toString();

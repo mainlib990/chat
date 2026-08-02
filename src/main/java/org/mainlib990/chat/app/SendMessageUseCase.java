@@ -52,7 +52,12 @@ public class SendMessageUseCase {
                             Result::failed
                     ));
         }
-        return execute(channelId.orElseThrow(), senderId.orElseThrow(), receiverId.orElseThrow(), content.orElseThrow());
+        return execute(
+                channelId.orElseThrow(),
+                senderId.orElseThrow(),
+                receiverId.orElseThrow(),
+                content.orElseThrow()
+        );
     }
 
     private Result<ChatEvent> execute(
@@ -86,9 +91,7 @@ public class SendMessageUseCase {
         );
         Result<Function<ChatEvent.Id, ChatEvent>> eventFactory = chatPolicy.sendMessage(message);
 
-        Result<ChatEvent> chatEvent = eventFactory.map(
-                factory -> factory.apply(new ChatEvent.Id(UUID.randomUUID()))
-        );
+        Result<ChatEvent> chatEvent = eventFactory.map(f -> f.apply(new ChatEvent.Id(UUID.randomUUID())));
         chatEvent.ifPresent(chatWriter::write);
         return chatEvent;
     }

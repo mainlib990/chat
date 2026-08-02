@@ -23,9 +23,4 @@ public class FakeChatWriter implements ChatWriter {
     public boolean isWrittenSentEvent() {
         return isWrittenSentEvent;
     }
-
-    public void clear() {
-        isWrittenNotifiedEvent = false;
-        isWrittenSentEvent = false;
-    }
 }

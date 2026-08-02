@@ -18,12 +18,15 @@ public class ChatPolicy {
             Message message
     ) {
         return switch (message.receiver()) {
-            case Receiver.Offline _ -> Result.succeeded(eventId -> ChatEvent.notified(eventId, message));
+            case Receiver.Offline _ ->
+                    Result.succeeded(eventId -> ChatEvent.notified(eventId, message));
             case Receiver.Online(_, var activity) -> switch (activity) {
-                case Receiver.Activity.None _ -> Result.succeeded(eventId -> ChatEvent.notified(eventId, message));
+                case Receiver.Activity.None _ ->
+                        Result.succeeded(eventId -> ChatEvent.notified(eventId, message));
                 case Receiver.Activity.Chatting(var chattingChannelId) when chattingChannelId.equals(channelId) ->
                         Result.succeeded(eventId -> ChatEvent.sent(eventId, message));
-                case Receiver.Activity.Chatting _ -> Result.succeeded(eventId -> ChatEvent.notified(eventId, message));
+                case Receiver.Activity.Chatting _ ->
+                        Result.succeeded(eventId -> ChatEvent.notified(eventId, message));
             };
         };
     }
