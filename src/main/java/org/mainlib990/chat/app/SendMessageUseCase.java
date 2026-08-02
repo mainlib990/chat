@@ -83,10 +83,10 @@ public class SendMessageUseCase {
         Instant createdAt = Instant.now();
         var message = new Message(
                 messageId,
-                channel.getValue(),
+                channel.orElseThrow(),
                 createdAt,
                 senderId,
-                receiver.getValue(),
+                receiver.orElseThrow(),
                 content
         );
         Result<Function<ChatEvent.Id, ChatEvent>> eventFactory = chatPolicy.sendMessage(message);

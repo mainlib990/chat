@@ -24,7 +24,7 @@ public sealed interface Result<V> {
         return new Failed<>(Objects.requireNonNull(message));
     }
 
-    default V getValue() {
+    default V orElseThrow() {
         return switch (this) {
             case Succeeded(var v) -> v;
             case Failed(_) -> throw new IllegalStateException();
