@@ -26,6 +26,9 @@ public sealed interface Validate<V, R> {
 
     @SafeVarargs
     static <R> Validate<Void, List<R>> allOf(Validate<?, R>... validates) {
+        for (Validate<?, R> validate : validates) {
+            Objects.requireNonNull(validate);
+        }
         return allOf(Arrays.asList(validates));
     }
 

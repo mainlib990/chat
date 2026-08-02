@@ -32,6 +32,7 @@ public sealed interface Result<V> {
     }
 
     default <R> Result<R> map(Function<V, R> mapper) {
+        Objects.requireNonNull(mapper);
         return switch (this) {
             case Succeeded(var v) -> succeeded(mapper.apply(v));
             case Failed(var message) -> failed(message);
@@ -39,6 +40,7 @@ public sealed interface Result<V> {
     }
 
     default void ifPresent(Consumer<V> consumer) {
+        Objects.requireNonNull(consumer);
         switch (this) {
             case Succeeded(var v) -> consumer.accept(v);
             case Failed(_) -> {
