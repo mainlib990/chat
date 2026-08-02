@@ -1,6 +1,6 @@
 package org.mainlib990.chat.app;
 
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mainlib990.chat.domain.*;
@@ -75,15 +75,6 @@ class SendMessageUseCaseTest {
         }
     }
 
-    static final SendMessageUseCase sut;
-    static final FakeChatWriter chatWriter;
-
-    static {
-        var config = new Config();
-        sut = config.useCase;
-        chatWriter = config.chatWriter;
-    }
-
     static final String OPENED_CHANNEL = Config.opened1.id().value().toString();
     static final String SENDER = Config.senderId.value().toString();
     static final String RECEIVER_IN_SAME_CHANNEL = Config.onlineChatting1.id().value().toString();
@@ -92,9 +83,14 @@ class SendMessageUseCaseTest {
     static final String RECEIVER_IN_OFFLINE = Config.offline.id().value().toString();
     static final String TEXT = "Fake Message";
 
-    @AfterEach
+    SendMessageUseCase sut;
+    FakeChatWriter chatWriter;
+
+    @BeforeEach
     void setUp() {
-        chatWriter.clear();
+        var config = new Config();
+        sut = config.useCase;
+        chatWriter = config.chatWriter;
     }
 
     @Nested
