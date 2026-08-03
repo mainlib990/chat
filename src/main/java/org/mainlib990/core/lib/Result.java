@@ -31,7 +31,7 @@ public sealed interface Result<V> {
         };
     }
 
-    default <R> Result<R> map(Function<V, R> mapper) {
+    default <R> Result<R> map(Function<? super V, ? extends R> mapper) {
         Objects.requireNonNull(mapper);
         return switch (this) {
             case Succeeded(var v) -> succeeded(mapper.apply(v));
@@ -39,7 +39,7 @@ public sealed interface Result<V> {
         };
     }
 
-    default void ifPresent(Consumer<V> consumer) {
+    default void ifPresent(Consumer<? super V> consumer) {
         Objects.requireNonNull(consumer);
         switch (this) {
             case Succeeded(var v) -> consumer.accept(v);

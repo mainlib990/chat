@@ -25,14 +25,14 @@ public sealed interface Validate<V, R> {
     }
 
     @SafeVarargs
-    static <R> Validate<Void, List<R>> allOf(Validate<?, R>... validates) {
-        for (Validate<?, R> validate : validates) {
+    static <R> Validate<Void, List<R>> allOf(Validate<?, ? extends R>... validates) {
+        for (Validate<?, ? extends R> validate : validates) {
             Objects.requireNonNull(validate);
         }
         return allOf(Arrays.asList(validates));
     }
 
-    private static <R> Validate<Void, List<R>> allOf(List<Validate<?, R>> validates) {
+    private static <R> Validate<Void, List<R>> allOf(List<Validate<?, ? extends R>> validates) {
         List<R> rs = validates.stream()
                 .<R>mapMulti((validate, consumer) -> {
                     if (validate instanceof Invalidated(var r)) {

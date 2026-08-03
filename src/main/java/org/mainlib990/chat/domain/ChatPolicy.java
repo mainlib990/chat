@@ -13,10 +13,7 @@ public class ChatPolicy {
         };
     }
 
-    private Result<Function<ChatEvent.Id, ChatEvent>> sendMessage(
-            Channel.Id channelId,
-            Message message
-    ) {
+    private Result<Function<ChatEvent.Id, ChatEvent>> sendMessage(Channel.Id channelId, Message message) {
         return switch (message.receiver()) {
             case Receiver.Offline _ ->
                     Result.succeeded(eventId -> ChatEvent.notified(eventId, message));
