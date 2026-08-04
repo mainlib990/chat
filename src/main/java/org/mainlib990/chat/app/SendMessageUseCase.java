@@ -67,16 +67,16 @@ public class SendMessageUseCase {
             Content content
     ) {
         Result<Channel> channel = channelReader.read(channelId);
-        if (channel instanceof Result.Failed(var message)) {
-            return Result.failed(message);
+        if (channel instanceof Result.Failed(var error)) {
+            return Result.failed(error);
         }
         Result<Void> sender = userReader.existsSender(senderId);
-        if (sender instanceof Result.Failed(var message)) {
-            return Result.failed(message);
+        if (sender instanceof Result.Failed(var error)) {
+            return Result.failed(error);
         }
         Result<Receiver> receiver = userReader.read(receiverId);
-        if (receiver instanceof Result.Failed(var message)) {
-            return Result.failed(message);
+        if (receiver instanceof Result.Failed(var error)) {
+            return Result.failed(error);
         }
 
         var messageId = new Message.Id(UUID.randomUUID());
@@ -91,8 +91,12 @@ public class SendMessageUseCase {
         );
         Result<Function<ChatEvent.Id, ChatEvent>> eventFactory = chatPolicy.sendMessage(message);
 
-        Result<ChatEvent> chatEvent = eventFactory.map(f -> f.apply(new ChatEvent.Id(UUID.randomUUID())));
-        chatEvent.ifPresent(chatWriter::write);
-        return chatEvent;
+        if (eventFactory instanceof Result.Failed(var error)) {
+            return Result.failed(error);
+        }
+        ChatEvent chatEvent = eventFactory.orElseThrow()
+                .apply(new ChatEvent.Id(UUID.randomUUID()));
+        chatWriter.write(chatEvent);
+        return Result.succeeded(chatEvent);
     }
 }

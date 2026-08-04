@@ -1,15 +1,13 @@
 package org.mainlib990.core.lib;
 
 import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 public sealed interface Result<V> {
 
     record Succeeded<V>(V value) implements Result<V> {
     }
 
-    record Failed<T>(String message) implements Result<T> {
+    record Failed<T>(String error) implements Result<T> {
     }
 
     static <V> Succeeded<V> succeeded(V value) {
@@ -20,8 +18,8 @@ public sealed interface Result<V> {
         return new Succeeded<>(null);
     }
 
-    static <V> Failed<V> failed(String message) {
-        return new Failed<>(Objects.requireNonNull(message));
+    static <V> Failed<V> failed(String error) {
+        return new Failed<>(Objects.requireNonNull(error));
     }
 
     default V orElseThrow() {
@@ -29,23 +27,5 @@ public sealed interface Result<V> {
             case Succeeded(var v) -> v;
             case Failed(_) -> throw new IllegalStateException();
         };
-    }
-
-    default <R> Result<R> map(Function<? super V, ? extends R> mapper) {
-        Objects.requireNonNull(mapper);
-        return switch (this) {
-            case Succeeded(var v) -> succeeded(mapper.apply(v));
-            case Failed(var message) -> failed(message);
-        };
-    }
-
-    default void ifPresent(Consumer<? super V> consumer) {
-        Objects.requireNonNull(consumer);
-        switch (this) {
-            case Succeeded(var v) -> consumer.accept(v);
-            case Failed(_) -> {
-                // do nothing
-            }
-        }
     }
 }
